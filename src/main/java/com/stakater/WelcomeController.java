@@ -1,4 +1,4 @@
-package com.mkyong;
+package com.stakater;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

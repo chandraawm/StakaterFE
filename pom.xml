@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>StakaterFE</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>StakaterFE</name>
 	<description>StakaterFE service Calls backend and prints the string returned from backend and
 		appends the date and time.</description>

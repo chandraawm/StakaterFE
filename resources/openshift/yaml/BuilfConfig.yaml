@@ -1,0 +1,64 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"build.openshift.io/v1","kind":"BuildConfig","metadata":{"annotations":{},"labels":{"application":"stakaterfe","template":"openjdk18-web-basic-s2i","xpaas":"1.4.14"},"name":"stakaterfe","namespace":"exp-gcas7-build"},"spec":{"output":{"to":{"kind":"ImageStreamTag","name":"stakaterfe:latest"}},"resources":{"limits":{"cpu":1,"memory":"2Gi"},"requests":{"cpu":1,"memory":"2Gi"}},"source":{"contextDir":"","git":{"ref":"one","uri":"https://git.dhl.com/GCA-1200/GRAUsrMgmtFE.git"},"type":"Git"},"strategy":{"sourceStrategy":{"env":[{"name":"MAVEN_MIRROR_URL","value":"https://artifactory.dhl.com/maven-release"}],"forcePull":true,"from":{"kind":"ImageStreamTag","name":"java:8","namespace":"openshift"}},"type":"Source"},"triggers":[{"github":{"secret":"dummy"},"type":"GitHub"},{"generic":{"secret":"dummy"},"type":"Generic"},{"imageChange":{},"type":"ImageChange"},{"type":"ConfigChange"}]}}
+  creationTimestamp: '2021-06-12T08:17:50Z'
+  labels:
+    application: stakaterfe
+    template: openjdk18-web-basic-s2i
+    xpaas: 1.4.14
+  name: stakaterfe
+  namespace: exp-gcas7-build
+  resourceVersion: '1550897764'
+  selfLink: >-
+    /apis/build.openshift.io/v1/namespaces/exp-gcas7-build/buildconfigs/stakaterfe
+  uid: ad8e732c-cb56-11eb-a867-0050569a205e
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'stakaterfe:latest'
+  postCommit: {}
+  resources:
+    limits:
+      cpu: '1'
+      memory: 2Gi
+    requests:
+      cpu: '1'
+      memory: 2Gi
+  runPolicy: Serial
+  source:
+    git:
+      ref: main
+      uri: 'https://github.com/chandraawm/StakaterBE.git'
+    type: Git
+  strategy:
+    sourceStrategy:
+      env:
+        - name: MAVEN_MIRROR_URL
+          value: 'https://artifactory.dhl.com/maven-release'
+      forcePull: true
+      from:
+        kind: ImageStreamTag
+        name: 'java:8'
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+    - github:
+        secret: dummy
+      type: GitHub
+    - generic:
+        secret: dummy
+      type: Generic
+    - imageChange:
+        lastTriggeredImageID: >-
+          docker-registry.default.svc:5000/openshift/java@sha256:b0c7bbc0df90ba817f01213a548a747796fc01e2b1933193de0df5c48d46d920
+      type: ImageChange
+    - type: ConfigChange
+status:
+  lastVersion: 3

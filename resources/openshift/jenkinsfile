@@ -1,0 +1,45 @@
+@Library('Openshift pipeline library') _
+import com.dhl.openshift.pipeline.ProjectConfig
+import com.dhl.openshift.pipeline.ProjectConfigLoader
+
+node('openshift-prg') {
+
+	 stage('checkout') {
+		git credentialsId: 'chandraawm', url: "https://github.com/chandraawm/StakaterFE.git", branch: "main"
+	 }
+	
+
+	 withITSOpenshift('svc-exp-gcas7-test') {
+
+		def imageName
+		def projectConfig = ProjectConfigLoader.loadProjectConfig('gca-s7-app', "${WORKSPACE}/",this)
+
+		stage('image build') {
+			openshift.withProject( 'exp-gcas7-build' ) {
+				applyDeploymentConfig(projectConfig, 'build', openshift)
+				applyStageConfig('build', projectConfig, openshift)
+
+				if (projectConfig.hasBuildConfig()) {
+				  def buildConfig = applyBuildConfig(projectConfig, 'build', openshift)
+				  buildInOpenshift(buildConfig.metadata.name, openshift, "${WORKSPACE}")
+				  imageName = buildConfig.spec.output.to.name
+				}
+			}
+		}
+
+ 	  stage('deploy to Test') {
+			openshift.withProject( 'exp-gcas7-test' ) {
+				def processedDeploymentTemplate = applyDeploymentConfig(projectConfig, 'test', openshift)
+				applyStageConfig('test', projectConfig, openshift)
+
+				if (projectConfig.hasBuildConfig()) {
+					openshift.tag("exp-gcas7-build/${imageName}", "exp-gcas7-test/${imageName}")
+				}
+
+				openshiftDeploy(processedDeploymentTemplate, imageName, openshift)
+			}
+		}
+
+
+	}
+}

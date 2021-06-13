@@ -1,0 +1,10 @@
+{
+    "SOURCE_REPOSITORY_URL": "https://github.com/chandraawm/StakaterFE.git",
+    "HOSTNAME_HTTP": "stakaterfe",
+    "CONTEXT_DIR": "",
+    "GITHUB_WEBHOOK_SECRET": "dummy",
+    "APPLICATION_NAME": "stakaterfe",
+    "SOURCE_REPOSITORY_REF": "main",
+    "GENERIC_WEBHOOK_SECRET": "dummy",
+    "IMAGE_STREAM_NAMESPACE": "openshift"
+}

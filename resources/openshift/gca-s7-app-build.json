@@ -1,0 +1,151 @@
+{
+    "metadata": {
+        "uid": "10d459ac-97c5-11e7-9ed2-0050569a2c35",
+        "resourceVersion": "316421977",
+        "creationTimestamp": "2017-09-12T14:17:10Z",
+        "name": "openjdk18-web-basic-s2i",
+        "annotations": {
+            "openshift.io/display-name": "OpenJDK 8",
+            "description": "An example Java application using OpenJDK 8. For more information about using this template, see https://github.com/jboss-openshift/application-templates.",
+            "template.openshift.io/support-url": "https://access.redhat.com",
+            "openshift.io/provider-display-name": "Red Hat, Inc.",
+            "version": "1.4.14",
+            "iconClass": "icon-rh-openjdk",
+            "template.openshift.io/long-description": "This template defines resources needed to develop Red Hat OpenJDK Java 8 based application.",
+            "tags": "java",
+            "template.openshift.io/documentation-url": "https://access.redhat.com/documentation/en/"
+        },
+        "selfLink": "/apis/template.openshift.io/v1/namespaces/openshift/templates/openjdk18-web-basic-s2i"
+    },
+    "apiVersion": "template.openshift.io/v1",
+    "kind": "Template",
+    "objects": [
+        {
+            "metadata": {
+                "name": "${APPLICATION_NAME}",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                }
+            },
+            "apiVersion": "v1",
+            "kind": "BuildConfig",
+            "spec": {
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "${APPLICATION_NAME}:latest"
+                    }
+                },
+                "source": {
+                    "git": {
+                        "ref": "${SOURCE_REPOSITORY_REF}",
+                        "uri": "${SOURCE_REPOSITORY_URL}"
+                    },
+                    "type": "Git",
+                    "contextDir": "${CONTEXT_DIR}"
+                },
+                "strategy": {
+                    "sourceStrategy": {
+                        "forcePull": true,
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "java:8",
+                            "namespace": "${IMAGE_STREAM_NAMESPACE}"
+                        },
+						"env": [
+							{
+								"name": "MAVEN_MIRROR_URL",
+								"value": "https://artifactory.dhl.com/maven-release"
+							}					
+						]
+                    },
+                    "type": "Source"
+                },
+                "triggers": [
+                    {
+                        "github": {
+                            "secret": "${GITHUB_WEBHOOK_SECRET}"
+                        },
+                        "type": "GitHub"
+                    },
+                    {
+                        "type": "Generic",
+                        "generic": {
+                            "secret": "${GENERIC_WEBHOOK_SECRET}"
+                        }
+                    },
+                    {
+                        "imageChange": {
+                            
+                        },
+                        "type": "ImageChange"
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ]
+            }
+        }
+    ],
+    "message": "A new java application has been created in your project.",
+    "parameters": [
+        {
+            "displayName": "Application Name",
+            "name": "APPLICATION_NAME",
+            "description": "The name for the application.",
+            "value": "openjdk-app",
+            "required": true
+        },
+        {
+            "displayName": "Custom http Route Hostname",
+            "name": "HOSTNAME_HTTP",
+            "description": "Custom hostname for http service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>"
+        },
+        {
+            "displayName": "Git Repository URL",
+            "name": "SOURCE_REPOSITORY_URL",
+            "description": "Git source URI for application",
+            "value": "https://github.com/jboss-openshift/openshift-quickstarts",
+            "required": true
+        },
+        {
+            "displayName": "Git Reference",
+            "name": "SOURCE_REPOSITORY_REF",
+            "description": "Git branch/tag reference",
+            "value": "master"
+        },
+        {
+            "displayName": "Context Directory",
+            "name": "CONTEXT_DIR",
+            "description": "Path within Git project to build; empty for root project directory.",
+            "value": "undertow-servlet"
+        },
+        {
+            "displayName": "Github Webhook Secret",
+            "name": "GITHUB_WEBHOOK_SECRET",
+            "description": "GitHub trigger secret",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "displayName": "Generic Webhook Secret",
+            "name": "GENERIC_WEBHOOK_SECRET",
+            "description": "Generic build trigger secret",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "displayName": "ImageStream Namespace",
+            "name": "IMAGE_STREAM_NAMESPACE",
+            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
+            "value": "openshift",
+            "required": true
+        }
+    ],
+    "labels": {
+        "template": "openjdk18-web-basic-s2i",
+        "xpaas": "1.4.14"
+    }
+}

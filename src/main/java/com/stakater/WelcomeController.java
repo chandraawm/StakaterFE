@@ -7,16 +7,18 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-@Controller
+@RestController
 public class WelcomeController {
     
     @Value("${url}")
     private String url;
 
     @RequestMapping("/")
-    public String displayHello(Map<String, Object> model) {
+    public String displayHello() {
+   // public String displayHello(Map<String, Object> model) {
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -25,8 +27,9 @@ public class WelcomeController {
 
         RestTemplate rt = new RestTemplate();
         String res = rt.getForObject(url, String.class);
-        model.put("message", formatDateTime + " " + res);
-        return "welcome";
+        String result = formatDateTime +" "+res;
+       // model.put("message", formatDateTime + " " + res);
+        return result;
     }
 
 }

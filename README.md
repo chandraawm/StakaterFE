@@ -7,7 +7,7 @@ Sample Output : 12/06/2021 12:02:36 Hello Chandra Reddy
 
 
 
-Technologies Used : Java , Spring Boot web application with jsp , RestTemplate , Embeded Tomcat
+Technologies Used : Java , Spring Boot , RestTemplate , Embeded Tomcat
 Deployment : openshift used
 
 Deployment Notes : 
